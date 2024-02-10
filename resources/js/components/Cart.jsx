@@ -187,9 +187,13 @@ class Cart extends Component {
         this.setState({ customer_id: event.target.value });
     }
     handlePrint = () => {
-        const { cart } = this.state; // Assuming this.state.cart holds your cart items
-    
-        let tableContents = `
+        const { cart, customer_id, customers  } = this.state; // Assuming this.state.cart holds your cart items
+
+        const customer = customer_id ? customers.find(c => c.id.toString() === customer_id) : false;
+        const customerName = customer ? customer.first_name + " " + customer.last_name : "Client Locale";
+        const orderId = Date.now().toString().slice(-5);
+
+        let invoiceContents = `
         <style>
             body {
                 font-family: 'Arial', sans-serif;
@@ -198,11 +202,9 @@ class Cart extends Component {
                 width: 100%;
                 font-size: 10pt;
             }
-            table {
+            table, th, td {
                 width: 100%;
                 border-collapse: collapse;
-            }
-            th, td {
                 border: 1px solid black;
                 padding: 8px;
                 text-align: left;
@@ -210,33 +212,48 @@ class Cart extends Component {
             th {
                 background-color: #f2f2f2;
             }
-            h1 {
+            .header, .footer {
                 text-align: center;
+                margin-top: 20px;
             }
         </style>
+        <div class="header">
+            <h1>STE CHELAM TRAVAUX SARL</h1>
+            <p>ACIERS INOXYDABLE ET ACCESSOIRES INOX</p>
+            <p>Commande Client N°: ${orderId} | Date: ${new Date().toLocaleDateString()}</p>
+            <p>Client: ${customerName} </p>
+        </div>
         <table>
             <tr>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
+                <th>Désignation</th>
+                <th>Référence</th>
+                <th>Qté</th>
+                <th>Prix</th>
                 <th>Total</th>
             </tr>`;
-    
+        
+        let totalttc = 0;
         cart.forEach(item => {
-            tableContents += `<tr>
-                                <td>${item.name}</td>
-                                <td>${item.pivot.quantity}</td>
-                                <td>${item.price}</td>
-                                <td>${item.pivot.quantity * item.price}</td>
-                              </tr>`;
+            invoiceContents += `<tr>
+                                    <td>${item.name}</td>
+                                    <td>ID-${item.id}</td>
+                                    <td>${item.pivot.quantity}</td>
+                                    <td>${item.price}</td>
+                                    <td>${item.pivot.quantity * item.price}</td>
+                                </tr>`;
+            totalttc += (item.pivot.quantity * item.price);
         });
     
-        tableContents += "</table>";
+        invoiceContents += `</table>
+        <div class="footer">
+            <p>Net à payer: ${totalttc} DH</p>
+            <p>HAY ESSALAM BLOC 4 N°24 SIDI SLIMANE | EMAIL: maroc.archi.design@gmail.com</p>
+            <p>TEL: 06 60 05 88 77 | RC:1993 | IF:21860368 | ICE:001888287000033</p>
+        </div>`;
     
-        var a = window.open('', '', 'height=1000, width=850'); 
-        a.document.write('<!DOCTYPE html><html><head><title>Print Bon de commande</title></head><body>'); 
-        a.document.write('<h1>Bon de commande</h1>'); 
-        a.document.write(tableContents); 
+        let a = window.open('', '', 'height=1000, width=850'); 
+        a.document.write('<!DOCTYPE html><html><head><title>Bon de commande</title></head><body>'); 
+        a.document.write(invoiceContents); 
         a.document.write('</body></html>'); 
         a.document.close(); 
     
@@ -246,9 +263,8 @@ class Cart extends Component {
             a.close(); // Close the print window
         };
     
-        console.log('printing');
-    };
-    
+        console.log('Invoice printing');
+    }
       
     handleClickSubmit() {
         Swal.fire({
