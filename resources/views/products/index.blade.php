@@ -10,6 +10,15 @@
 @endsection
 @section('content')
 <div class="card product-list">
+    <div class="card-header">
+        <!-- Search Form -->
+        <form action="{{ route('products.index') }}" method="GET" class="form-inline">
+            <div class="form-group mb-2">
+                <input type="text" class="form-control" name="search" placeholder="{{ __('product.Search') }}" value="{{ request('search') }}">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">{{ __('product.Search') }}</button>
+        </form>
+    </div>
     <div class="card-body">
         <table class="table">
             <thead>

@@ -28,12 +28,14 @@
                         <p>{{ __('dashboard.title') }}</p>
                     </a>
                 </li>
-                <li class="nav-item has-treeview">
-                    <a href="{{ route('products.index') }}" class="nav-link {{ activeSegment('products') }}">
-                        <i class="nav-icon fas fa-th-large"></i>
-                        <p>{{ __('product.title') }}</p>
-                    </a>
-                </li>
+                @if(auth()->user()->is_admin)
+                    <li class="nav-item has-treeview">
+                        <a href="{{ route('products.index') }}" class="nav-link {{ activeSegment('products') }}">
+                            <i class="nav-icon fas fa-th-large"></i>
+                            <p>{{ __('product.title') }}</p>
+                        </a>
+                    </li>
+                @endif
                 <li class="nav-item has-treeview">
                     <a href="{{ route('cart.index') }}" class="nav-link {{ activeSegment('cart') }}">
                         <i class="nav-icon fas fa-cart-plus"></i>

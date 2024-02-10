@@ -25,11 +25,47 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 .user-cart {
     .card {
         height: 400px;
+        overflow: scroll;
+        overflow-x: hidden;
     }
     .qty {
         width: 45px;
         float: left;
     }
+}
+
+@media screen {
+    .print-invoice {
+      display: none;
+    }
+  }
+  
+  @media print {
+    body * {
+      display: none;
+    }
+    .print-invoice, .print-invoice * {
+      display: block;
+    }
+    .print-invoice {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+  }
+  
+.product-image-placeholder {
+  width: 100px; /* Image width */
+  height: 100px; /* Image height */
+  background-color: #007bff; /* Placeholder background color */
+  color: white; /* Text color */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px; /* Adjust based on your preference */
+  border-radius: 50%; /* Circle shape */
+  margin-bottom: 10px; /* Space below the placeholder */
 }
 
 .order-product {

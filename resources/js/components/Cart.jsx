@@ -186,6 +186,70 @@ class Cart extends Component {
     setCustomerId(event) {
         this.setState({ customer_id: event.target.value });
     }
+    handlePrint = () => {
+        const { cart } = this.state; // Assuming this.state.cart holds your cart items
+    
+        let tableContents = `
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                font-size: 10pt;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            h1 {
+                text-align: center;
+            }
+        </style>
+        <table>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>`;
+    
+        cart.forEach(item => {
+            tableContents += `<tr>
+                                <td>${item.name}</td>
+                                <td>${item.pivot.quantity}</td>
+                                <td>${item.price}</td>
+                                <td>${item.pivot.quantity * item.price}</td>
+                              </tr>`;
+        });
+    
+        tableContents += "</table>";
+    
+        var a = window.open('', '', 'height=1000, width=850'); 
+        a.document.write('<!DOCTYPE html><html><head><title>Print Bon de commande</title></head><body>'); 
+        a.document.write('<h1>Bon de commande</h1>'); 
+        a.document.write(tableContents); 
+        a.document.write('</body></html>'); 
+        a.document.close(); 
+    
+        a.onload = function() {
+            a.focus(); // Focus on the new window
+            a.print(); // Print the contents
+            a.close(); // Close the print window
+        };
+    
+        console.log('printing');
+    };
+    
+      
     handleClickSubmit() {
         Swal.fire({
             title: this.state.translations["received_amount"],
@@ -316,6 +380,11 @@ class Cart extends Component {
                             </button>
                         </div>
                         <div className="col">
+                            <button type="button" onClick={this.handlePrint} className="btn btn-primary">
+                                Print Invoice
+                            </button>
+                        </div>
+                        <div className="col">
                             <button
                                 type="button"
                                 className="btn btn-primary btn-block"
@@ -344,7 +413,9 @@ class Cart extends Component {
                                 key={p.id}
                                 className="item"
                             >
-                                <img src={p.image_url} alt="" />
+                                <div className="product-image-placeholder" aria-label={p.name}>
+                                    {p.name[0]}
+                                </div>
                                 <h5
                                     style={
                                         window.APP.warning_quantity > p.quantity

@@ -19,7 +19,24 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
-    Route::resource('products', ProductController::class);
+
+    // Publicly accessible product listing
+    Route::get('products', [ProductController::class, 'index'])->name('products.index');
+    // Optional: Publicly accessible product details
+    //Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show')->withoutMiddleware(['auth']);
+
+    // Admin protected product routes (excluding index and show)
+    Route::middleware(['admin'])->group(function () {
+        Route::post('products', [ProductController::class, 'store'])->name('products.store');
+        Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+        Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
+        Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+        Route::get('products/create', [ProductController::class, 'create'])->name('products.create'); // Ensure this comes after the other product routes to avoid conflict with show route
+    });
+
+
+    //Route::resource('products', ProductController::class);
+    
     Route::resource('customers', CustomerController::class);
     Route::resource('orders', OrderController::class);
 
