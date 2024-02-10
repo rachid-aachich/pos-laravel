@@ -18,10 +18,10 @@ class UserSeeder extends Seeder
         User::updateOrCreate([
             'email' => 'admin@example.com',
         ], [
-            'first_name' => 'Admin',
-            'last_name' => 'User',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('adminpassword'),
+            'first_name' => 'Mghari',
+            'last_name' => 'Chelhaoui',
+            'email' => 'mghari@chelam.com',
+            'password' => bcrypt('chelam2023'),
             'is_admin' => true,
         ]);
 
@@ -31,8 +31,8 @@ class UserSeeder extends Seeder
         ], [
             'first_name' => 'Regular',
             'last_name' => 'User',
-            'email' => 'user@example.com',
-            'password' => bcrypt('userpassword'),
+            'email' => 'caisse@chelam.com',
+            'password' => bcrypt('caisse123'),
             'is_admin' => false,
         ]);
     }
